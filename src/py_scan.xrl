@@ -25,6 +25,8 @@ LINT    = {INT}(l|L)
 INTPART = ({DIGIT})+
 FRACT   = \.({DIGIT})+
 PTFLT   = (({INTPART})?{FRACT})|({INTPART}\.)
+EXP     = (e|E)(\+|-)?{DIGIT}+
+EXPFLT  = (({INTPART})|({PTFLT})){EXP}
 
 Rules.
 %% integers
@@ -42,6 +44,19 @@ case hd(TokenChars) of
         case hd(lists:reverse(TokenChars)) of
             46 -> %% .
                 base_float(TokenChars ++ "0", TokenLine);
+            _ ->
+                base_float(TokenChars, TokenLine)
+        end
+end.
+{EXPFLT}       :
+case hd(TokenChars) of
+    46 -> %% .
+        base_float([$0 | TokenChars], TokenLine);
+    _ ->
+        case string:tokens(TokenChars, [$.]) of
+            [Dec, [E | Exp]] when E == $e;
+                                  E == $E ->
+                base_float(Dec ++ ".0e" ++ Exp, TokenLine);
             _ ->
                 base_float(TokenChars, TokenLine)
         end
