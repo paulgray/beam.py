@@ -20,6 +20,11 @@ STRPRE  = (r)|(u)|(ur)|(R)|(U)|(UR)|(Ur)|(uR)
 DECINT  = ({NZDIGIT}{DIGIT}*)|0
 OCTINT  = 0({ODIGIT})+
 HEXINT  = 0(x|X)({HDIGIT})+
+INT     = ({DECINT})|({OCTINT})|({HEXINT})
+LINT    = {INT}(l|L)
+INTPART = ({DIGIT})+
+FRACT   = \.({DIGIT})+
+PTFLT   = (({INTPART})?{FRACT})|({INTPART}\.)
 
 Rules.
 %% integers
@@ -29,6 +34,18 @@ base_int(tl(tl(TokenChars)), TokenLine, 16).
 base_int(TokenChars, TokenLine, 8).
 {DECINT}      :
 base_int(TokenChars, TokenLine, 10).
+{PTFLT}       :
+case hd(TokenChars) of
+    46 -> %% .
+        base_float([$0 | TokenChars], TokenLine);
+    _ ->
+        case hd(lists:reverse(TokenChars)) of
+            46 -> %% .
+                base_float(TokenChars ++ "0", TokenLine);
+            _ ->
+                base_float(TokenChars, TokenLine)
+        end
+end.
 
 Erlang code.
 -spec(base_int/3 :: (string(), integer(), integer()) ->
@@ -40,4 +57,15 @@ base_int(String, Line, Base) ->
             {error, not_an_integer};
         Int when is_integer(Int) ->
             {token, {number, Line, Int}}
+    end.
+
+-spec(base_float/2 :: (string(), integer()) ->
+             {token, {number, integer(), float()}} |
+                 {error, not_a_float}).
+base_float(String, Line) ->
+    case catch list_to_float(String) of
+        {'EXIT', _} ->
+            {error, not_a_float};
+        Float when is_float(Float) ->
+            {token, {number, Line, Float}}
     end.
