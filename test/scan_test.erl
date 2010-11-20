@@ -47,14 +47,30 @@ short_string_test() ->
     ?assertEqual({ok, [{string, 1, "foo\\\"bar"}], 1},
                  py_scan:string("\"foo\\\"bar\"")),
     ?assertEqual({ok, [{string, 1, "5"}], 1},
-                 py_scan:string("\'5\'")).
+                 py_scan:string("\'5\'")),
+    ?assertEqual({ok, [{string, 1, "foo"}, 
+                       {string, 1, "bar"}], 1},
+                 py_scan:string("\'foo\'\'bar\'")).
 
 long_string_test() ->
     ?assertEqual({ok, [{string, 1, ""}], 1},
                  py_scan:string("\'\'\'\'\'\'")),
     ?assertEqual({ok, [{string, 1, ""}], 1},
                  py_scan:string("\"\"\"\"\"\"")),
+    ?assertEqual({ok, [{string, 1, "foobar"}], 1},
+                 py_scan:string("\"\"\"foobar\"\"\"")),
+    ?assertEqual({ok, [{string, 1, "foo\"\"bar"}], 1},
+                 py_scan:string("\"\"\"foo\"\"bar\"\"\"")),
+    ?assertEqual({ok, [{string, 1, "foo"},
+                       {string, 1, "bar"}], 1},
+                 py_scan:string("\"\"\"foo\"\"\"\"\"\"bar\"\"\"")),
     ?assertEqual({ok, [{string, 1, "\n"}], 2},
                  py_scan:string("\'\'\'\n\'\'\'")),
     ?assertEqual({ok, [{string, 1, "\n"}], 2},
-                 py_scan:string("\"\"\"\n\"\"\"")).
+                 py_scan:string("\"\"\"\n\"\"\"")),
+    ?assertEqual({ok, [{string, 1, "\"\"foo"},
+                       {string, 1, "bar"}], 1},
+                 py_scan:string("\"\"\"\"\"foo\"\"\"\"\"\"bar\"\"\"")),
+    ?assertEqual({ok, [{string, 1, "foo"},
+                       {string, 1, "bar"}], 1},
+                 py_scan:string("\"\"\"foo\"\"\"\"\"\"bar\"\"\"")).
