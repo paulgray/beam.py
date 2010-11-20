@@ -44,8 +44,9 @@ SSTRIS  = ({SSTRCS})|({ESCSEQ})
 SSTRID  = ({SSTRCD})|({ESCSEQ})
 SHRTSTR = (\'({SSTRIS})*\')|(\"({SSTRID})*\")
 STRLTR  = ({STRPRE})?(({SHRTSTR})|({LNGSTR}))
-LITERAL = ({STRLTR})|({INT})|({FLOAT})
-ATOM    = ({ID})|({LITERAL})|({ENCL})
+OP     = \-|\+|\*|\/|(and)|(or)|(not)|(\~)|(\/\/)|\^|\&|\%|(\>\>)|(\<\<)
+WS      = ([\000-\s]|%.*)
+
 
 Rules.
 %% integers
@@ -86,8 +87,14 @@ end.
                                          tl(tl(tl(TokenChars))))))))}}.
 {SHRTSTR}       :
 {token, {string, TokenLine, lists:reverse(tl(lists:reverse(tl(TokenChars))))}}.
-
-
+{OP}            :
+{token, {list_to_atom(TokenChars), TokenLine}}.
+{ID}            :
+{token, {id, TokenLine, list_to_atom(TokenChars)}}.
+[();,]          :
+{token, {list_to_atom(TokenChars), TokenLine}}.
+{WS}+           :
+skip_token.
 
 Erlang code.
 -spec(base_int/3 :: (string(), integer(), integer()) ->

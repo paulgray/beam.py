@@ -74,3 +74,12 @@ long_string_test() ->
     ?assertEqual({ok, [{string, 1, "foo"},
                        {string, 1, "bar"}], 1},
                  py_scan:string("\"\"\"foo\"\"\"\"\"\"bar\"\"\"")).
+
+op_test() ->
+    ?assertEqual({ok, [{number, 1, 5}, 
+                       {op, 1, '+'},
+                       {number, 1, 2}], 1},
+                 py_scan:string("5+2")),
+    ?assertEqual({ok, [{op, 1, '-'},
+                       {number, 1, 10}], 1},
+                 py_scan:string("-10")).
