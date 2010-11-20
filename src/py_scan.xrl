@@ -27,6 +27,16 @@ FRACT   = \.({DIGIT})+
 PTFLT   = (({INTPART})?{FRACT})|({INTPART}\.)
 EXP     = (e|E)(\+|-)?{DIGIT}+
 EXPFLT  = (({INTPART})|({PTFLT})){EXP}
+FLOAT   = ({PTFLT})|({EXPFLT})
+SSTRCS  = [^\\\n\']
+SSTRCD  = [^\\\n\"]
+ESCSEQ  = \\.
+SSTRIS  = ({SSTRCS})|({ESCSEQ})
+SSTRID  = ({SSTRCD})|({ESCSEQ})
+SHRTSTR = (\'({SSTRIS})*\')|(\"({SSTRID})*\")
+STRLTR  = ({STRPRE})?(({SHRTSTR})|({LNGSTR}))
+LITERAL = ({STRLTR})|({INT})|({FLOAT})
+ATOM    = ({ID})|({LITERAL})|({ENCL})
 
 Rules.
 %% integers
@@ -61,6 +71,10 @@ case hd(TokenChars) of
                 base_float(TokenChars, TokenLine)
         end
 end.
+{SHRTSTR}       :
+{token, {string, TokenLine, lists:reverse(tl(lists:reverse(tl(TokenChars))))}}.
+
+
 
 Erlang code.
 -spec(base_int/3 :: (string(), integer(), integer()) ->

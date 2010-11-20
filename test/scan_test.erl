@@ -34,3 +34,13 @@ float_test() ->
                  py_scan:string("1.5e2")),
     ?assertEqual({ok, [{number, 1, 100.0}], 1},
                  py_scan:string("1.e2")).
+
+string_test() ->
+    ?assertEqual({ok, [{string, 1, ""}], 1},
+                 py_scan:string("\'\'")),
+    ?assertEqual({ok, [{string, 1, ""}], 1},
+                 py_scan:string("\"\"")),
+    ?assertEqual({ok, [{string, 1, "foobar"}], 1},
+                 py_scan:string("\'foobar\'")),
+    ?assertEqual({ok, [{string, 1, "foobar"}], 1},
+                 py_scan:string("\"foobar\"")).
