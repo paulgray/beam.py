@@ -28,6 +28,11 @@ PTFLT   = (({INTPART})?{FRACT})|({INTPART}\.)
 EXP     = (e|E)(\+|-)?{DIGIT}+
 EXPFLT  = (({INTPART})|({PTFLT})){EXP}
 FLOAT   = ({PTFLT})|({EXPFLT})
+LSTRCS  = [^\\]
+LSTRCD  = [^\\]
+LSTRIS  = ({LSTRCS})|({ESCSEQ})
+LSTRID  = ({LSTRCD})|({ESCSEQ})
+LNGSTR  = (\'\'\'({LSTRIS})*\'\'\')|(\"\"\"({LSTRID})*\"\"\")
 SSTRCS  = [^\\\n\']
 SSTRCD  = [^\\\n\"]
 ESCSEQ  = \\.
@@ -71,6 +76,10 @@ case hd(TokenChars) of
                 base_float(TokenChars, TokenLine)
         end
 end.
+{LNGSTR}        :
+{token, {string, TokenLine, lists:reverse(
+                              tl(tl(tl(lists:reverse(
+                                         tl(tl(tl(TokenChars))))))))}}.
 {SHRTSTR}       :
 {token, {string, TokenLine, lists:reverse(tl(lists:reverse(tl(TokenChars))))}}.
 

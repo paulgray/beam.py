@@ -35,7 +35,7 @@ float_test() ->
     ?assertEqual({ok, [{number, 1, 100.0}], 1},
                  py_scan:string("1.e2")).
 
-string_test() ->
+short_string_test() ->
     ?assertEqual({ok, [{string, 1, ""}], 1},
                  py_scan:string("\'\'")),
     ?assertEqual({ok, [{string, 1, ""}], 1},
@@ -43,4 +43,18 @@ string_test() ->
     ?assertEqual({ok, [{string, 1, "foobar"}], 1},
                  py_scan:string("\'foobar\'")),
     ?assertEqual({ok, [{string, 1, "foobar"}], 1},
-                 py_scan:string("\"foobar\"")).
+                 py_scan:string("\"foobar\"")),
+    ?assertEqual({ok, [{string, 1, "foo\\\"bar"}], 1},
+                 py_scan:string("\"foo\\\"bar\"")),
+    ?assertEqual({ok, [{string, 1, "5"}], 1},
+                 py_scan:string("\'5\'")).
+
+long_string_test() ->
+    ?assertEqual({ok, [{string, 1, ""}], 1},
+                 py_scan:string("\'\'\'\'\'\'")),
+    ?assertEqual({ok, [{string, 1, ""}], 1},
+                 py_scan:string("\"\"\"\"\"\"")),
+    ?assertEqual({ok, [{string, 1, "\n"}], 2},
+                 py_scan:string("\'\'\'\n\'\'\'")),
+    ?assertEqual({ok, [{string, 1, "\n"}], 2},
+                 py_scan:string("\"\"\"\n\"\"\"")).
