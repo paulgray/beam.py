@@ -1,0 +1,6 @@
+#!/bin/sh
+
+erlc src/py_scan.xrl
+erlc py_scan.erl
+erl -make
+erl -pa test_ebin/ -eval "eunit:test(scan_test), init:stop()."
