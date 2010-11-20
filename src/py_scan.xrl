@@ -45,6 +45,7 @@ SSTRID  = ({SSTRCD})|({ESCSEQ})
 SHRTSTR = (\'({SSTRIS})*\')|(\"({SSTRID})*\")
 STRLTR  = ({STRPRE})?(({SHRTSTR})|({LNGSTR}))
 OP      = (\*\*)|\-|\+|\*|\/|(and)|(or)|(not)|(\~)|(\/\/)|\^|\&|\%|(\>\>)|(\<\<)
+CMP     = <|>|(==)|(>=)|(<=)|(<>)|(!=)|(is(\snot)?)|((not\s)?in)
 WS      = ([\000-\s]|%.*)
 
 
@@ -91,6 +92,8 @@ end.
 {token, {list_to_atom(TokenChars), TokenLine}}.
 {ID}            :
 {token, {id, TokenLine, list_to_atom(TokenChars)}}.
+{CMP}           :
+{token, {comp_operator, TokenLine, list_to_atom(TokenChars)}}.
 [();,]          :
 {token, {list_to_atom(TokenChars), TokenLine}}.
 {WS}+           :
