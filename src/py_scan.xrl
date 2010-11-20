@@ -44,7 +44,7 @@ SSTRIS  = ({SSTRCS})|({ESCSEQ})
 SSTRID  = ({SSTRCD})|({ESCSEQ})
 SHRTSTR = (\'({SSTRIS})*\')|(\"({SSTRID})*\")
 STRLTR  = ({STRPRE})?(({SHRTSTR})|({LNGSTR}))
-OP     = \-|\+|\*|\/|(and)|(or)|(not)|(\~)|(\/\/)|\^|\&|\%|(\>\>)|(\<\<)
+OP      = (\*\*)|\-|\+|\*|\/|(and)|(or)|(not)|(\~)|(\/\/)|\^|\&|\%|(\>\>)|(\<\<)
 WS      = ([\000-\s]|%.*)
 
 
