@@ -46,6 +46,8 @@ SHRTSTR = (\'({SSTRIS})*\')|(\"({SSTRID})*\")
 STRLTR  = ({STRPRE})?(({SHRTSTR})|({LNGSTR}))
 OP      = (\*\*)|\-|\+|\*|\/|(and)|(or)|(not)|(\~)|(\/\/)|\^|\&|\%|(\>\>)|(\<\<)
 CMP     = <|>|(==)|(>=)|(<=)|(<>)|(!=)|(is(\snot)?)|((not\s)?in)
+KW      = (if)|(else)|(lambda)
+SEP     = (:)|(,)
 WS      = ([\000-\s]|%.*)
 
 
@@ -88,7 +90,11 @@ end.
                                          tl(tl(tl(TokenChars))))))))}}.
 {SHRTSTR}       :
 {token, {string, TokenLine, lists:reverse(tl(lists:reverse(tl(TokenChars))))}}.
+{KW}            :
+{token, {list_to_atom(TokenChars), TokenLine}}.
 {OP}            :
+{token, {list_to_atom(TokenChars), TokenLine}}.
+{SEP}           :
 {token, {list_to_atom(TokenChars), TokenLine}}.
 {ID}            :
 {token, {id, TokenLine, list_to_atom(TokenChars)}}.
