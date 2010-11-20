@@ -14,8 +14,8 @@
 decimal_test() ->
     ?assertEqual({ok, [{number, 1, 0}], 1}, 
                  py_scan:string("0")),
-    ?assertEqual({ok, [{number, 1, -40}], 1},
-                 py_scan:string("-40")).
+    ?assertEqual({ok, [{number, 1, 40}], 1},
+                 py_scan:string("40")).
 
 float_test() ->
     ?assertEqual({ok, [{number, 1, 0.0}], 1},
@@ -27,10 +27,10 @@ float_test() ->
     ?assertEqual({ok, [{number, 1, 31.5}], 1},
                  py_scan:string("31.5")),
     ?assertEqual({ok, [{number, 1, 3.5}], 1},
-                 py_scan:string("3.5e1")),
+                 py_scan:string("3.5e0")),
     ?assertEqual({ok, [{number, 1, 3.5}], 1},
-                 py_scan:string("3.5E1")),
-    ?assertEqual({ok, [{number, 1, 15.0}], 1},
+                 py_scan:string("3.5E0")),
+    ?assertEqual({ok, [{number, 1, 150.0}], 1},
                  py_scan:string("1.5e2")),
-    ?assertEqual({ok, [{number, 1, 10.0}], 1},
+    ?assertEqual({ok, [{number, 1, 100.0}], 1},
                  py_scan:string("1.e2")).
