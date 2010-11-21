@@ -48,10 +48,10 @@ shift_expr -> a_expr : '$1'.
 a_expr -> a_expr '+' m_expr : ['$1', '+', '$3'].
 a_expr -> a_expr '-' m_expr : ['$1', '-', '$3'].
 a_expr -> m_expr : '$1'.
-m_expr -> m_expr '*' u_expr : ['$1', '*', '$3'].
-m_expr -> m_expr '//' u_expr : ['$1', 'div', '$3'].
-m_expr -> m_expr '/' u_expr : ['$1', '/', '$3'].
-m_expr -> m_expr '%' u_expr : ['$1', 'rem', '$3'].
+m_expr -> m_expr '*' u_expr : {'*', '$1', '$3'}.
+m_expr -> m_expr '//' u_expr : {'//', '$1', '$3'}.
+m_expr -> m_expr '/' u_expr : {'/', '$1', '$3'}.
+m_expr -> m_expr '%' u_expr : {'%', '$1', '$3'}.
 m_expr -> u_expr : '$1'.
 u_expr -> '-' u_expr : {'-', '$2'}.
 u_expr -> '+' u_expr : {'+', '$2'}.

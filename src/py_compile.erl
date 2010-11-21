@@ -83,9 +83,23 @@ compile_tree([{'~', Right} | Rest], Ctx, Acc) ->
              erl_syntax:operator('bnot'),
              hd(compile_tree([Right], Ctx, []))),
     compile_tree(Rest, Ctx, [Expr | Acc]);
+compile_tree([{'*', Left, Right} | Rest], Ctx, Acc) ->
+    compile_tree(Rest, Ctx, [infix_expr('*', Left, Right, Ctx) | Acc]);
+compile_tree([{'//', Left, Right} | Rest], Ctx, Acc) ->
+    compile_tree(Rest, Ctx, [infix_expr('div', Left, Right, Ctx) | Acc]);
+compile_tree([{'/', Left, Right} | Rest], Ctx, Acc) ->
+    compile_tree(Rest, Ctx, [infix_expr('/', Left, Right, Ctx) | Acc]);
+compile_tree([{'%', Left, Right} | Rest], Ctx, Acc) ->
+    compile_tree(Rest, Ctx, [infix_expr('rem', Left, Right, Ctx) | Acc]);
 compile_tree([{integer, I} | Rest], Ctx, Acc) ->
     compile_tree(Rest, Ctx, [erl_syntax:integer(I) | Acc]);
 compile_tree([{float, F} | Rest], Ctx, Acc) ->
     compile_tree(Rest, Ctx, [erl_syntax:float(F) | Acc]);
 compile_tree([], _, Acc) ->
     lists:reverse(Acc).
+
+infix_expr(Op, Left, Right, Ctx) ->
+    erl_syntax:infix_expr(
+      hd(compile_tree([Left], Ctx, [])),
+      erl_syntax:operator(Op),
+      hd(compile_tree([Right], Ctx, []))).
