@@ -47,7 +47,7 @@ STRLTR  = ({STRPRE})?(({SHRTSTR})|({LNGSTR}))
 OP      = (\*\*)|\-|\+|\*|\/|(and)|(or)|(not)|(\~)|(\/\/)|\^|\&|\%|(\>\>)|(\<\<)
 CMP     = <|>|(==)|(>=)|(<=)|(<>)|(!=)|(is(\snot)?)|((not\s)?in)
 KW      = (if)|(else)|(lambda)
-SEP     = (:)|(,)
+SEP     = [:,.\[\]]
 WS      = ([\000-\s]|%.*)
 
 
@@ -85,11 +85,11 @@ case hd(TokenChars) of
         end
 end.
 {LNGSTR}        :
-{token, {string, TokenLine, lists:reverse(
-                              tl(tl(tl(lists:reverse(
-                                         tl(tl(tl(TokenChars))))))))}}.
+{token, {stringliteral, TokenLine, lists:reverse(
+                                     tl(tl(tl(lists:reverse(
+                                                tl(tl(tl(TokenChars))))))))}}.
 {SHRTSTR}       :
-{token, {string, TokenLine, lists:reverse(tl(lists:reverse(tl(TokenChars))))}}.
+{token, {stringliteral, TokenLine, lists:reverse(tl(lists:reverse(tl(TokenChars))))}}.
 {KW}            :
 {token, {list_to_atom(TokenChars), TokenLine}}.
 {OP}            :
@@ -97,7 +97,7 @@ end.
 {SEP}           :
 {token, {list_to_atom(TokenChars), TokenLine}}.
 {ID}            :
-{token, {id, TokenLine, list_to_atom(TokenChars)}}.
+{token, {identifier, TokenLine, list_to_atom(TokenChars)}}.
 {CMP}           :
 {token, {comp_operator, TokenLine, list_to_atom(TokenChars)}}.
 [();,]          :

@@ -7,12 +7,14 @@
 %%%-------------------------------------------------------------------
 Nonterminals input_input expression_list comparison not_test
 and_test or_test conditional_expression expression lambda_form
-parameter_list
+parameter_list atom attributeref call slicing subscription
+literal short_slice upper_bound lower_bound simple_slicing
+extended_slicing slice_list
 xor_expr or_expr and_expr shift_expr a_expr m_expr u_expr power
 primary.
 Terminals comp_operator number '+' '-' '*' '/' '//' '%' '~' '**' 
 '>>' '<<' '|' '&' '^' 'not' 'and' 'or' 'if' 'else' 'lambda' ':'
-',' 'TODO'.
+'[' ']' ',' '.' identifier stringliteral 'TODO'.
 Rootsymbol input_input.
 
 input_input -> expression_list : '$1'.
@@ -55,9 +57,28 @@ u_expr -> '-' u_expr : ['-', '$2'].
 u_expr -> '+' u_expr : ['+', '$2'].
 u_expr -> '~' u_expr : ['~', '$2'].
 u_expr -> power : '$1'.
-power -> primary '**' u_expr : ['$1', '**', '$3'].
+power -> primary '**' u_expr : {'**', '$1', '$3'}.
 power -> primary : '$1'.
-primary -> number : unwrap('$1').
+primary -> atom : '$1'.
+primary -> attributeref : '$1'.
+primary -> subscription : '$1'.
+primary -> slicing : '$1'.
+%primary -> call : '$1'.
+atom -> identifier : unwrap('$1').
+atom -> literal : '$1'.
+literal -> stringliteral : unwrap('$1').
+literal -> number : {integer, unwrap('$1')}.
+attributeref -> primary '.' identifier : ['$1', '.', '$3'].
+subscription -> primary '[' expression ']' : ['subscr', '$1', '$3'].
+slicing -> simple_slicing : '$1'.
+slicing -> extended_slicing : '$1'.
+simple_slicing -> primary '[' short_slice ']' : ['slices', [['$1', '$3']]].
+short_slice -> lower_bound ':' upper_bound : ['$1', '$3'].
+lower_bound -> expression : '$1'.
+upper_bound -> expression : '$1'.
+extended_slicing -> primary '[' slice_list ']' : ['slices', '$3'].
+slice_list -> 'TODO'.
+%call -> 'TODO'.
 
 Erlang code.
 unwrap({_, _, V}) ->
