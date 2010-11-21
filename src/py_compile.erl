@@ -25,11 +25,11 @@ compile(File, Module, Opts) ->
 %                    BeamFile = filename:join(atom_to_list(Module) ++ ".beam"),
 %                    file:write_file(BeamFile, Binary);
                 {error, Reason} ->
-                    io:format(stderr, "Compilation of ~p failed, reason: ~p~n", 
+                    io:format("Compilation of ~p failed, reason: ~p~n", 
                               [Module, Reason])
             end;
         {error, Reason} ->
-            io:format(stderr, "Parsing of ~p failed, reason: ~p~n", 
+            io:format("Parsing of ~p failed, reason: ~p~n", 
                       [Module, Reason])
     end.
 
@@ -68,7 +68,9 @@ compile_tree([{'**', Left, Right} | Rest], Ctx, Acc) ->
              [hd(compile_tree([Left], Ctx, [])),
              hd(compile_tree([Right], Ctx, []))]),
     compile_tree(Rest, Ctx, [Expr | Acc]);
-compile_tree([{integer, N} | Rest], Ctx, Acc) ->
-    compile_tree(Rest, Ctx, [erl_syntax:integer(N) | Acc]);
+compile_tree([{integer, I} | Rest], Ctx, Acc) ->
+    compile_tree(Rest, Ctx, [erl_syntax:integer(I) | Acc]);
+compile_tree([{float, F} | Rest], Ctx, Acc) ->
+    compile_tree(Rest, Ctx, [erl_syntax:float(F) | Acc]);
 compile_tree([], _, Acc) ->
     lists:reverse(Acc).

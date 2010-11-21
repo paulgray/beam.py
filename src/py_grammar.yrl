@@ -9,12 +9,12 @@ Nonterminals input_input expression_list comparison not_test
 and_test or_test conditional_expression expression lambda_form
 parameter_list atom attributeref call slicing subscription
 literal short_slice upper_bound lower_bound simple_slicing
-extended_slicing slice_list
+extended_slicing slice_list number
 xor_expr or_expr and_expr shift_expr a_expr m_expr u_expr power
 primary.
-Terminals comp_operator number '+' '-' '*' '/' '//' '%' '~' '**' 
+Terminals comp_operator integer '+' '-' '*' '/' '//' '%' '~' '**' 
 '>>' '<<' '|' '&' '^' 'not' 'and' 'or' 'if' 'else' 'lambda' ':'
-'[' ']' ',' '.' identifier stringliteral 'TODO'.
+'[' ']' ',' '.' identifier stringliteral 'TODO' float.
 Rootsymbol input_input.
 
 input_input -> expression_list : '$1'.
@@ -67,7 +67,7 @@ primary -> slicing : '$1'.
 atom -> identifier : unwrap('$1').
 atom -> literal : '$1'.
 literal -> stringliteral : unwrap('$1').
-literal -> number : {integer, unwrap('$1')}.
+literal -> number : '$1'.
 attributeref -> primary '.' identifier : ['$1', '.', '$3'].
 subscription -> primary '[' expression ']' : ['subscr', '$1', '$3'].
 slicing -> simple_slicing : '$1'.
@@ -78,6 +78,8 @@ lower_bound -> expression : '$1'.
 upper_bound -> expression : '$1'.
 extended_slicing -> primary '[' slice_list ']' : ['slices', '$3'].
 slice_list -> 'TODO'.
+number -> integer : {integer, unwrap('$1')}.
+number -> float : {float, unwrap('$1')}.
 %call -> 'TODO'.
 
 Erlang code.

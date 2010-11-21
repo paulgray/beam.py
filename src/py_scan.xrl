@@ -107,23 +107,23 @@ skip_token.
 
 Erlang code.
 -spec(base_int/3 :: (string(), integer(), integer()) ->
-             {token, {number, integer(), integer()}} |
+             {token, {integer, integer(), integer()}} |
                  {error, not_an_integer}).
 base_int(String, Line, Base) ->
     case catch erlang:list_to_integer(String, Base) of
         {'EXIT', _} ->
             {error, not_an_integer};
         Int when is_integer(Int) ->
-            {token, {number, Line, Int}}
+            {token, {integer, Line, Int}}
     end.
 
 -spec(base_float/2 :: (string(), integer()) ->
-             {token, {number, integer(), float()}} |
+             {token, {float, integer(), float()}} |
                  {error, not_a_float}).
 base_float(String, Line) ->
     case catch list_to_float(String) of
         {'EXIT', _} ->
             {error, not_a_float};
         Float when is_float(Float) ->
-            {token, {number, Line, Float}}
+            {token, {float, Line, Float}}
     end.
