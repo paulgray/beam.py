@@ -42,11 +42,11 @@ xor_expr -> xor_expr '^' and_expr : ['$1', 'bxor', '$3'].
 xor_expr -> and_expr : '$1'.
 and_expr -> and_expr '&' shift_expr : ['$1', 'band', '$3'].
 and_expr -> shift_expr : '$1'.
-shift_expr -> shift_expr '>>' a_expr : ['$1', 'bsr', '$3'].
-shift_expr -> shift_expr '<<' a_expr : ['$1', 'bsl', '$3'].
+shift_expr -> shift_expr '>>' a_expr : {'>>', '$1', '$3'}.
+shift_expr -> shift_expr '<<' a_expr : {'<<', '$1', '$3'}.
 shift_expr -> a_expr : '$1'.
-a_expr -> a_expr '+' m_expr : ['$1', '+', '$3'].
-a_expr -> a_expr '-' m_expr : ['$1', '-', '$3'].
+a_expr -> a_expr '+' m_expr : {'+', '$1', '$3'}.
+a_expr -> a_expr '-' m_expr : {'-', '$1', '$3'}.
 a_expr -> m_expr : '$1'.
 m_expr -> m_expr '*' u_expr : {'*', '$1', '$3'}.
 m_expr -> m_expr '//' u_expr : {'//', '$1', '$3'}.

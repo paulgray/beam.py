@@ -91,6 +91,14 @@ compile_tree([{'/', Left, Right} | Rest], Ctx, Acc) ->
     compile_tree(Rest, Ctx, [infix_expr('/', Left, Right, Ctx) | Acc]);
 compile_tree([{'%', Left, Right} | Rest], Ctx, Acc) ->
     compile_tree(Rest, Ctx, [infix_expr('rem', Left, Right, Ctx) | Acc]);
+compile_tree([{'+', Left, Right} | Rest], Ctx, Acc) ->
+    compile_tree(Rest, Ctx, [infix_expr('+', Left, Right, Ctx) | Acc]);
+compile_tree([{'-', Left, Right} | Rest], Ctx, Acc) ->
+    compile_tree(Rest, Ctx, [infix_expr('-', Left, Right, Ctx) | Acc]);
+compile_tree([{'>>', Left, Right} | Rest], Ctx, Acc) ->
+    compile_tree(Rest, Ctx, [infix_expr('bsr', Left, Right, Ctx) | Acc]);
+compile_tree([{'<<', Left, Right} | Rest], Ctx, Acc) ->
+    compile_tree(Rest, Ctx, [infix_expr('bsl', Left, Right, Ctx) | Acc]);
 compile_tree([{integer, I} | Rest], Ctx, Acc) ->
     compile_tree(Rest, Ctx, [erl_syntax:integer(I) | Acc]);
 compile_tree([{float, F} | Rest], Ctx, Acc) ->
