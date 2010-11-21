@@ -68,6 +68,21 @@ compile_tree([{'**', Left, Right} | Rest], Ctx, Acc) ->
              [hd(compile_tree([Left], Ctx, [])),
              hd(compile_tree([Right], Ctx, []))]),
     compile_tree(Rest, Ctx, [Expr | Acc]);
+compile_tree([{'-', Right} | Rest], Ctx, Acc) ->
+    Expr = erl_syntax:prefix_expr(
+             erl_syntax:operator('-'),
+             hd(compile_tree([Right], Ctx, []))),
+    compile_tree(Rest, Ctx, [Expr | Acc]);
+compile_tree([{'+', Right} | Rest], Ctx, Acc) ->
+    Expr = erl_syntax:prefix_expr(
+             erl_syntax:operator('+'),
+             hd(compile_tree([Right], Ctx, []))),
+    compile_tree(Rest, Ctx, [Expr | Acc]);
+compile_tree([{'~', Right} | Rest], Ctx, Acc) ->
+    Expr = erl_syntax:prefix_expr(
+             erl_syntax:operator('bnot'),
+             hd(compile_tree([Right], Ctx, []))),
+    compile_tree(Rest, Ctx, [Expr | Acc]);
 compile_tree([{integer, I} | Rest], Ctx, Acc) ->
     compile_tree(Rest, Ctx, [erl_syntax:integer(I) | Acc]);
 compile_tree([{float, F} | Rest], Ctx, Acc) ->
